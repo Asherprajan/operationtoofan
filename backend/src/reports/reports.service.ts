@@ -19,9 +19,22 @@ export class ReportsService {
   async create(createReportDto: CreateReportDto) {
     const trackingId = this.generateTrackingId();
 
+    let parsedEvidenceUrls: string[] = [];
+    if (createReportDto.evidenceUrls) {
+      try {
+        parsedEvidenceUrls = JSON.parse(createReportDto.evidenceUrls);
+      } catch (e) {
+        parsedEvidenceUrls = [createReportDto.evidenceUrls];
+      }
+    }
+
     const report = await this.prisma.report.create({
       data: {
-        ...createReportDto,
+        title: createReportDto.title,
+        category: createReportDto.category,
+        location: createReportDto.location,
+        description: createReportDto.description,
+        evidenceUrls: parsedEvidenceUrls,
         trackingId,
         incidentDate: new Date(createReportDto.incidentDate),
       },
