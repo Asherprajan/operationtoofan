@@ -3,7 +3,23 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+}
+
+enum ReportStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  EVIDENCE_REQUESTED
+  VERIFIED
+  FORWARDED
+  CLOSED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
 }
 
 
@@ -16,9 +32,9 @@ model Report {
   location      String
   incidentDate  DateTime
   description   String
-  evidenceUrls  String
-  status        String   @default("SUBMITTED")
-  priority      String   @default("MEDIUM")
+  evidenceUrls  String[]
+  status        ReportStatus @default(SUBMITTED)
+  priority      Priority     @default(MEDIUM)
   internalNotes String?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
